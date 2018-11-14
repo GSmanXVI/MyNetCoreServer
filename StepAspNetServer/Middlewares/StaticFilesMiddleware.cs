@@ -29,6 +29,9 @@ namespace StepAspNetServer.Middlewares
                 if (File.Exists(path))
                 {
                     var bytes = File.ReadAllBytes(path);
+                    if (Path.GetExtension(path) == ".html") response.ContentType = "text/html";
+                    if (Path.GetExtension(path) == ".css") response.ContentType = "text/css";
+                    if (Path.GetExtension(path) == ".ico") response.ContentType = "image/x-icon";
                     using (var writer = new BinaryWriter(response.OutputStream))
                     {
                         writer.Write(bytes);

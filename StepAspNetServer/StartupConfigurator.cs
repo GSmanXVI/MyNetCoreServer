@@ -6,6 +6,9 @@ using System.Text;
 
 namespace StepAspNetServer
 {
+    //localhost:8080/Home/Index
+    //localhost:8080/Home/Index?name=Gleb
+
     class StartupConfigurator : IConfigurator
     {
         public void Configure(MiddlewareBuilder builder)
@@ -13,7 +16,13 @@ namespace StepAspNetServer
             builder
                 .Use<LoggerMiddleware>()
                 //.Use<IndexMiddleware>()
-                .Use<StaticFilesMiddleware>();
+                .Use<StaticFilesMiddleware>()
+                .Use<MvcMiddleware>();
+        }
+
+        public void ConfigureServices(IocBuilder builder)
+        {
+
         }
     }
 }
