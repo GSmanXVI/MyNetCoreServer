@@ -1,4 +1,5 @@
 ﻿using StepAspNetServer.Services;
+using StepAspNetServer.Tools;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -15,6 +16,7 @@ namespace StepAspNetServer.Controllers
         }
 
         // Home/Index
+        [HttpMethod("GET")]
         public string Index()
         {
             return $"<h1>Index</h1><p>{TestService.Test()}</p>";

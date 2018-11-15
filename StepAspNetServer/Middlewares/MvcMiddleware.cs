@@ -42,6 +42,24 @@ namespace StepAspNetServer.Middlewares
             var actionType = controllerType.GetMethods()
                 .FirstOrDefault(x => x.Name.ToLower() == actionName.ToLower());
 
+            try
+            {
+                var test = actionType
+                    .CustomAttributes
+                    .FirstOrDefault();
+
+                var method = test.ConstructorArguments[0];
+
+                if (!String.Equals(request.HttpMethod, method.Value.ToString(), StringComparison.OrdinalIgnoreCase))
+                {
+                    Error(context);
+                }
+            }
+            catch (Exception)
+            {
+                Error(context);
+            }
+
             if (actionType == null)
             {
                 Error(context);
@@ -74,9 +92,11 @@ namespace StepAspNetServer.Middlewares
 
         private void Error(HttpListenerContext context)
         {
-            context.Response.StatusCode = 404;
-            Console.WriteLine(context.Request);
+            context.Response.Redirect($@"http://{context.Request.Url.Authority}/404.html");
             context.Response.Close();
+            //context.Response.StatusCode = 404;
+            //Console.WriteLine(context.Request);
+            //context.Response.Close();
         }
     }
 }
