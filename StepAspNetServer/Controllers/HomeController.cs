@@ -1,15 +1,23 @@
-﻿using System;
+﻿using StepAspNetServer.Services;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace StepAspNetServer.Controllers
 {
-    public class HomeController
+    public class HomeController : Controller
     {
+        public ITestService TestService { get; }
+
+        public HomeController(ITestService testService)
+        {
+            TestService = testService;
+        }
+
         // Home/Index
         public string Index()
         {
-            return "<h1>Index</h1>";
+            return $"<h1>Index</h1><p>{TestService.Test()}</p>";
         }
 
         // Home/About?name=Gleb&age=24

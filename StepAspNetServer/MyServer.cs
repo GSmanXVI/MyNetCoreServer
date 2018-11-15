@@ -1,5 +1,7 @@
-﻿using StepAspNetServer.Infrastructure;
+﻿using StepAspNetServer.Controllers;
+using StepAspNetServer.Infrastructure;
 using StepAspNetServer.Middlewares;
+using StepAspNetServer.Services;
 using StepAspNetServer.Tools;
 using System;
 using System.Collections.Generic;
@@ -17,6 +19,7 @@ namespace StepAspNetServer
 
         private HttpListener httpListener;
         private HttpHandler middleware;
+        public static IocContainer Services;
 
         public MyServer(string domain, int port)
         {
@@ -29,9 +32,14 @@ namespace StepAspNetServer
         public void Configure<T>() where T : IConfigurator, new()
         {
             var config = new T();
+
             var builder = new MiddlewareBuilder();
             config.Configure(builder);
             middleware = builder.Build();
+
+            var iocBuilder = new IocBuilder();
+            config.ConfigureServices(iocBuilder);
+            Services = iocBuilder.Build();
         }
 
         public void Run()

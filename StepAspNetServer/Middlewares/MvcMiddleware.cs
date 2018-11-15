@@ -1,4 +1,5 @@
-﻿using StepAspNetServer.Tools;
+﻿using StepAspNetServer.Controllers;
+using StepAspNetServer.Tools;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -34,7 +35,7 @@ namespace StepAspNetServer.Middlewares
 
             if (controllerType == null)
             {
-                Error(response);
+                Error(context);
                 return;
             }
 
@@ -43,7 +44,7 @@ namespace StepAspNetServer.Middlewares
 
             if (actionType == null)
             {
-                Error(response);
+                Error(context);
                 return;
             }
 
@@ -57,7 +58,8 @@ namespace StepAspNetServer.Middlewares
                 Console.WriteLine(arrParams[i]);
             }
 
-            var controller = Activator.CreateInstance(controllerType);
+            //var controller = Activator.CreateInstance(controllerType);
+            var controller = MyServer.Services.Resolve(controllerType);
             var result = actionType.Invoke(controller, arrParams);
 
             response.ContentType = "text/html";
@@ -70,11 +72,11 @@ namespace StepAspNetServer.Middlewares
             next?.Invoke(context);
         }
 
-        private void Error(HttpListenerResponse response)
+        private void Error(HttpListenerContext context)
         {
-            response.StatusCode = 404;
-            Console.WriteLine("Error!");
-            response.Close();
+            context.Response.StatusCode = 404;
+            Console.WriteLine(context.Request);
+            context.Response.Close();
         }
     }
 }
